@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ConfigManagementPlugin
+metadata:
+  name: cue-cmp
+spec:
+  version: v1.0
+  generate:
+    command: [sh, /var/run/argocd/cue-plugin/generate.sh]
+  discover:
+    fileName: "./*.cue"
+  parameters:
+    static:
+      - name: values-files
+        title: VALUES FILES
+        collectionType: array
+    dynamic:
+      command: [sh, /var/run/argocd/cue-plugin/get_parameters.sh]

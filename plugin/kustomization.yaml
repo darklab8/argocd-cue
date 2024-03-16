@@ -1,0 +1,21 @@
+resources:
+  - namespace.yaml
+
+  # wget https://raw.githubusercontent.com/argoproj/argo-cd/v2.8.11/manifests/install.yaml
+  - argocd.v2.8.11.yaml
+
+configMapGenerator:
+  - name: cue-plugin-config
+    files:
+      - plugin.yaml
+      - generate.sh
+      - get_parameters.sh
+      - install_cue.sh
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+namespace: argocd
+
+patches:
+  - path: argocd-repo-server-deployment-patch.yaml

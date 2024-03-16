@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argocd-repo-server
+spec:
+  template:
+    spec:
+      initContainers:
+        - name: cuelang-plugin-setup
+          command:
+            - sh
+            - -c
+            - |
+              wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -O /tools/jq && chmod +x /tools/jq
+              /var/run/install_cue.sh
+          image: busybox:1.36
+          volumeMounts:
+            - mountPath: /tools
+              name: cue-plugin-tools
+            - mountPath: /var/run/install_cue.sh
+              subPath: install_cue.sh
+              name: cue-plugin-config
+      containers:
+      - name: cuelang-plugin
+        command:
+          - "/var/run/argocd/argocd-cmp-server"
+          - --loglevel=info
+        image: busybox:1.36
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 999
+        volumeMounts:
+          - mountPath: /var/run/argocd
+            name: var-files
+          - mountPath: /home/argocd/cmp-server/plugins
+            name: plugins
+          - mountPath: /cue-working-dir
+            name: cmp-plugin-tmp
+          - mountPath: /home/argocd/cmp-server/config/plugin.yaml
+            subPath: plugin.yaml
+            name: cue-plugin-config
+          - mountPath: /var/run/argocd/cue-plugin/generate.sh
+            subPath: generate.sh
+            name: cue-plugin-config
+          - mountPath: /var/run/argocd/cue-plugin/get_parameters.sh
+            subPath: get_parameters.sh
+            name: cue-plugin-config
+          - mountPath: /usr/local/bin
+            name: cue-plugin-tools
+      volumes:
+        - name: cue-plugin-tools
+          emptyDir: {}
+        - name: cmp-plugin-tmp
+          emptyDir: {}
+        - configMap:
+            name: cue-plugin-config
+            defaultMode: 0777
+          name: cue-plugin-config
