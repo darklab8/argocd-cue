@@ -24,7 +24,7 @@ jobs:
         run: >
             wget https://github.com/cue-lang/cue/releases/download/v0.7.1/cue_v0.7.1_linux_amd64.tar.gz -O -
             | tar xz
-            && mv cue /usr/local/bin
+            && mv cue /usr/local/bin/cue
             && chmod +x /usr/local/bin/cue
       - name: Test
         run: task app:test
