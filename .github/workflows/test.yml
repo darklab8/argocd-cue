@@ -1,0 +1,30 @@
+name: Test
+
+on:
+  push:
+    branches: ["master"]
+  schedule:
+    # every sunday
+    - cron: '0 10 1 * *'
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install Task
+        run: |
+          sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.21
+      - name: Setup cue
+        run: >
+            wget https://github.com/cue-lang/cue/releases/download/v0.7.1/cue_v0.7.1_linux_amd64.tar.gz -O -
+            | tar xz
+            && mv cue /usr/local/bin
+            && chmod +x /usr/local/bin/cue
+      - name: Test
+        run: task app:test

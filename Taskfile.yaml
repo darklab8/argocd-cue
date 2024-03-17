@@ -37,3 +37,7 @@ tasks:
     desc: try deploying cue application
     cmds:
       - kubectl apply -f ./application
+
+  app:test:
+    cmds:
+      - go test ./... -coverprofile=cover.out {{.CLI_ARGS}}
