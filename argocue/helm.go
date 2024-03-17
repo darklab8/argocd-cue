@@ -33,15 +33,8 @@ func RenderHelm(workdir utils_types.FilePath) {
 	fmt.Println(string(out))
 }
 
-type HelmParams struct {
-	Name           string `json:"name"`
-	Title          string `json:"title"`
-	CollectionType string `json:"collectionType"`
-	Map            map[string]interface{}
-}
-
-func NewHelmParams(Map map[string]interface{}) []HelmParams {
-	return []HelmParams{
+func NewHelmParams(Map map[string]interface{}) []ApplicationParams {
+	return []ApplicationParams{
 		{
 			Name:           "helm-parameters",
 			Title:          "Helm Parameters",

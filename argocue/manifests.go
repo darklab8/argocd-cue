@@ -1,6 +1,7 @@
 package argocue
 
 import (
+	"encoding/json"
 	"fmt"
 	"os/exec"
 
@@ -16,4 +17,21 @@ func RenderManifest(workdir utils_types.FilePath) {
 
 	logus.Log.CheckFatal(err, "failed to execute command", typelog.String("stdout", string(out)))
 	fmt.Println(string(out))
+}
+
+func NewManifestsParams(Map map[string]interface{}) []ApplicationParams {
+	return []ApplicationParams{
+		{
+			Name:           "manifests-parameters",
+			Title:          "Manifests Parameters",
+			CollectionType: "map",
+			Map:            Map,
+		},
+	}
+}
+
+func GetManifestsParameters(workdir utils_types.FilePath) {
+	jsoned, err := json.Marshal(NewManifestsParams(map[string]interface{}{}))
+	logus.Log.CheckWarn(err, "not able to marshal params")
+	fmt.Println(string(jsoned))
 }
