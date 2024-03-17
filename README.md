@@ -19,7 +19,7 @@ Argo cd plugin to support cue language.
 - tested on
   - local [Kind cluster](https://kind.sigs.k8s.io/) for amd64 cpu arch, kind v0.22.0, kube v1.29.2
   - microk8s with arm64 cpu architecture too, microk8s 1.28.7
-- written very close according to [official guide](https://argo-cd.readthedocs.io/en/stable/operator-manual/config-management-plugins/) and their [helm example plugin](https://github.com/argoproj/argo-cd/tree/master/examples/plugins/helm)
+- inspired by [official guide](https://argo-cd.readthedocs.io/en/stable/operator-manual/config-management-plugins/) and their [helm example plugin](https://github.com/argoproj/argo-cd/tree/master/examples/plugins/helm)
 
 # Getting started with kind cluster
 
