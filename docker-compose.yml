@@ -5,3 +5,8 @@ services:
       context: .
       args:
         ARCH: amd64
+    volumes:
+      - ./main:/usr/local/bin/argocue
+      - ./plugin/install_deps.sh:/usr/local/bin/install_deps
+      - /home/naa/repos/pet_projects/infra/k8s/modules/monitoring:/code/chart
+

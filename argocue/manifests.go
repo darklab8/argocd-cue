@@ -6,7 +6,6 @@ import (
 	"os/exec"
 
 	"github.com/darklab8/argocue/argocue/logus"
-	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
 
@@ -15,15 +14,7 @@ func RenderManifest(workdir utils_types.FilePath) {
 	cmd.Dir = workdir.ToString()
 	out, err := cmd.Output()
 
-	if err != nil {
-		err := err.(*exec.ExitError)
-		logus.Log.CheckPanic(err,
-			"failed to execute command cue cmd dump",
-			typelog.String("stdout", string(out)),
-			typelog.String("stderr", string(err.Stderr)),
-		)
-	}
-
+	HandleCmdError(out, err, "failed to run cue cmd dump")
 	fmt.Println(string(out))
 }
 

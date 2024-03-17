@@ -1,6 +1,8 @@
 package argocue
 
 import (
+	"os/exec"
+
 	"github.com/darklab8/argocue/argocue/logus"
 	"github.com/darklab8/argocue/argocue/pack"
 	"github.com/darklab8/go-typelog/typelog"
@@ -45,4 +47,29 @@ func Run(workdir utils_types.FilePath, command Command) {
 		logus.Log.Fatal("not recognized package type")
 	}
 
+}
+
+func HandleCmdError(out []byte, err error, msg string) {
+	if err != nil {
+		if err, ok := err.(*exec.ExitError); ok {
+			logus.Log.CheckPanic(err,
+				msg,
+				typelog.String("stdout", string(out)),
+				typelog.String("stderr", string(err.Stderr)),
+			)
+		}
+		if err, ok := err.(*exec.Error); ok {
+			logus.Log.CheckPanic(err,
+				msg,
+				typelog.String("stdout", string(out)),
+				typelog.String("stderr", string(err.Error())),
+			)
+		}
+
+		logus.Log.CheckPanic(err,
+			msg,
+			typelog.String("stdout", string(out)),
+			typelog.String("stderr", string(err.Error())),
+		)
+	}
 }
