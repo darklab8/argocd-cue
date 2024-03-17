@@ -13,20 +13,27 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+func HelmLoadDeps(workdir utils_types.FilePath) {
+	build := exec.Command("helm", "dep", "build")
+	build.Dir = workdir.ToString()
+	build_out, err := build.Output()
+	logus.Log.CheckFatal(err, "failed to execute command for loading helm deps", typelog.String("stdout", string(build_out)))
+}
+
 func BuildHelm(workdir utils_types.FilePath) {
 	build := exec.Command("cue", "cmd", "build")
 	build.Dir = workdir.ToString()
 	build_out, err := build.Output()
-	logus.Log.CheckFatal(err, "failed to execute command build", typelog.String("stdout", string(build_out)))
+	logus.Log.CheckFatal(err, "failed to execute command helm build", typelog.String("stdout", string(build_out)))
 }
 
 func RenderHelm(workdir utils_types.FilePath) {
+	HelmLoadDeps(workdir)
 	BuildHelm(workdir)
-
 	cmd := exec.Command("helm", "template", ".")
 	cmd.Dir = workdir.ToString()
 	out, err := cmd.Output()
-	logus.Log.CheckFatal(err, "failed to execute command template", typelog.String("stdout", string(out)), typelog.OptError(err))
+	logus.Log.CheckFatal(err, "failed to execute command helm template", typelog.String("stdout", string(out)), typelog.OptError(err))
 	fmt.Println(string(out))
 }
 
