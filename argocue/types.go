@@ -3,13 +3,13 @@ package argocue
 type Command string
 
 type CommandsType struct {
-	Generate  Command
-	GetParams Command
+	Generate      Command
+	GetParameters Command
 }
 
 var Commands CommandsType = CommandsType{
-	Generate:  "generate",
-	GetParams: "get_params",
+	Generate:      "generate",
+	GetParameters: "get_parameters",
 }
 
 type ApplicationParams struct {

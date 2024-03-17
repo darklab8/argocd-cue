@@ -19,7 +19,7 @@ func Run(workdir utils_types.FilePath, command Command) {
 			{
 				RenderManifest(workdir)
 			}
-		case Commands.GetParams:
+		case Commands.GetParameters:
 			{
 				GetManifestsParameters(workdir)
 			}
@@ -33,7 +33,7 @@ func Run(workdir utils_types.FilePath, command Command) {
 			{
 				RenderHelm(workdir)
 			}
-		case Commands.GetParams:
+		case Commands.GetParameters:
 			{
 				GetHelmParameters(workdir)
 			}

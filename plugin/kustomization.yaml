@@ -8,9 +8,7 @@ configMapGenerator:
   - name: cue-plugin-config
     files:
       - plugin.yaml
-      - generate.sh
-      - get_parameters.sh
-      - install_cue.sh
+      - install_deps.sh
 
 generatorOptions:
   disableNameSuffixHash: true

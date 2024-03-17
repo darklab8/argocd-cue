@@ -41,3 +41,14 @@ tasks:
   app:test:
     cmds:
       - go test ./argocue -coverprofile=cover.out {{.CLI_ARGS}}
+
+  docker:build:
+    cmds:
+      - docker build --tag darkwind8/argocue:${tag_version} .
+
+  docker:push:
+    cmds:
+      - docker push darkwind8/argocue:${tag_version}
+
+env:
+  tag_version: v0.2.0-a4
