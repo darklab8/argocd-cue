@@ -13,7 +13,7 @@ import (
 )
 
 func HelmLoadDeps(workdir utils_types.FilePath) {
-	build := exec.Command("helm", "dep", "update")
+	build := exec.Command("helm", "dep", "update", "--kube-insecure-skip-tls-verify")
 	build.Dir = workdir.ToString()
 	build_out, err := build.Output()
 	HandleCmdError(build_out, err, "failed to run helm dep update")
