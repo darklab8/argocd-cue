@@ -1,1 +1,1 @@
-module: "github.com/darklab8/argocue"
+module: "github.com/darklab8/argocd-cue"

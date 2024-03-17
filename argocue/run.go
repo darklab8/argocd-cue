@@ -3,8 +3,8 @@ package argocue
 import (
 	"os/exec"
 
-	"github.com/darklab8/argocue/argocue/logus"
-	"github.com/darklab8/argocue/argocue/pack"
+	"github.com/darklab8/argocd-cue/argocue/logus"
+	"github.com/darklab8/argocd-cue/argocue/pack"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
