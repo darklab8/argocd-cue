@@ -28,8 +28,8 @@ func BuildHelm(workdir utils_types.FilePath) {
 }
 
 func RenderHelm(workdir utils_types.FilePath) {
-	HelmLoadDeps(workdir)
 	BuildHelm(workdir)
+	HelmLoadDeps(workdir)
 	cmd := exec.Command("helm", "template", ".")
 	cmd.Dir = workdir.ToString()
 	out, err := cmd.Output()
