@@ -15,7 +15,15 @@ func RenderManifest(workdir utils_types.FilePath) {
 	cmd.Dir = workdir.ToString()
 	out, err := cmd.Output()
 
-	logus.Log.CheckFatal(err, "failed to execute command", typelog.String("stdout", string(out)))
+	if err != nil {
+		err := err.(*exec.ExitError)
+		logus.Log.CheckPanic(err,
+			"failed to execute command cue cmd dump",
+			typelog.String("stdout", string(out)),
+			typelog.String("stderr", string(err.Stderr)),
+		)
+	}
+
 	fmt.Println(string(out))
 }
 

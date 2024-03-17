@@ -17,14 +17,29 @@ func HelmLoadDeps(workdir utils_types.FilePath) {
 	build := exec.Command("helm", "dep", "build")
 	build.Dir = workdir.ToString()
 	build_out, err := build.Output()
-	logus.Log.CheckFatal(err, "failed to execute command for loading helm deps", typelog.String("stdout", string(build_out)))
+
+	if err != nil {
+		err := err.(*exec.ExitError)
+		logus.Log.CheckPanic(err,
+			"failed to load helm deps",
+			typelog.String("stdout", string(build_out)),
+			typelog.String("stderr", string(err.Stderr)),
+		)
+	}
 }
 
 func BuildHelm(workdir utils_types.FilePath) {
 	build := exec.Command("cue", "cmd", "build")
 	build.Dir = workdir.ToString()
 	build_out, err := build.Output()
-	logus.Log.CheckFatal(err, "failed to execute command helm build", typelog.String("stdout", string(build_out)))
+	if err != nil {
+		err := err.(*exec.ExitError)
+		logus.Log.CheckPanic(err,
+			"failed to run cue cmd build",
+			typelog.String("stdout", string(build_out)),
+			typelog.String("stderr", string(err.Stderr)),
+		)
+	}
 }
 
 func RenderHelm(workdir utils_types.FilePath) {
@@ -33,7 +48,14 @@ func RenderHelm(workdir utils_types.FilePath) {
 	cmd := exec.Command("helm", "template", ".")
 	cmd.Dir = workdir.ToString()
 	out, err := cmd.Output()
-	logus.Log.CheckFatal(err, "failed to execute command helm template", typelog.String("stdout", string(out)), typelog.OptError(err))
+	if err != nil {
+		err := err.(*exec.ExitError)
+		logus.Log.CheckPanic(err,
+			"failed to run helm template",
+			typelog.String("stdout", string(out)),
+			typelog.String("stderr", string(err.Stderr)),
+		)
+	}
 	fmt.Println(string(out))
 }
 

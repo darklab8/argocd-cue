@@ -1,7 +1,6 @@
 package pack
 
 import (
-	"log"
 	"os"
 	"strings"
 
@@ -19,9 +18,7 @@ const (
 
 func containsAnyFile(workdir utils_types.FilePath, filename string) bool {
 	files, err := os.ReadDir(workdir.ToString())
-	if err != nil {
-		log.Fatal(err)
-	}
+	logus.Log.CheckFatal(err, "contains any file")
 
 	for _, file := range files {
 		if strings.Contains(file.Name(), filename) {
