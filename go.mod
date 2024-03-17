@@ -1,4 +1,4 @@
-module github.com/darklab8/argocd-cue
+module github.com/darklab8/argocue
 
 go 1.21.1
 

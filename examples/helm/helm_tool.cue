@@ -3,7 +3,7 @@ package helm
 import (
 	"tool/file"
     "encoding/yaml"
-    "github.com/darklab8/argocd-cue/examples/helm/templates"
+    "github.com/darklab8/argocue/examples/helm/templates"
 
 )
 
