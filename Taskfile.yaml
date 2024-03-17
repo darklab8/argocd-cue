@@ -55,5 +55,10 @@ tasks:
     cmds:
       - docker push darkwind8/argocue:${tag_version}
 
+  docker:buildpush:
+    cmds:
+      - task: docker:build
+      - task: docker:push
+
 env:
-  tag_version: v0.2.0-a4
+  tag_version: v0.2.0
