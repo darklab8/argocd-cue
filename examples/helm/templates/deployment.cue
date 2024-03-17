@@ -3,18 +3,7 @@ package templates
 
 import (
     appsv1 "k8s.io/api/apps/v1"
-    corev1 "k8s.io/api/core/v1"
 )
-
-#namespace: corev1.#Namespace
-
-#namespace: {
-    apiVersion: "v1"
-    kind: "Namespace"
-    metadata: {
-      name: "helm-sample"
-    }
-}
 
 #deploy: appsv1.#Deployment
 
@@ -23,7 +12,6 @@ import (
   kind: "Deployment"
   metadata: {
     name: "helm-sample-deploy"
-    namespace: "helm-sample"
     labels:
       app: "helm-sample"
   }
@@ -62,9 +50,6 @@ import (
 }
 
 files: [
-  {
-    #namespace
-  },
   {
     #deploy
   }

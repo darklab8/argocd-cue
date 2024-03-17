@@ -1,5 +1,5 @@
 package helm
 
 values: {
-    namespace: "helm-sample"
+    your_variable: "your_variable"
 }

@@ -36,11 +36,16 @@ tasks:
   argo:apply:
     desc: try deploying cue application
     cmds:
-      - kubectl apply -f ./application
+      - kubectl apply -f ./examples/applications
 
   app:test:
     cmds:
       - go test ./argocue -coverprofile=cover.out {{.CLI_ARGS}}
+
+  app:build:
+    cmds:
+      - CGO_ENABLED=0 go build -v -o main main.go
+      - sudo ln -s $(pwd)/main /usr/local/bin/argocue
 
   docker:build:
     cmds:

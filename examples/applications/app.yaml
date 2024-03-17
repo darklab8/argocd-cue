@@ -1,0 +1,43 @@
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: cue-manifests
+  namespace: argocd
+spec:
+  source:
+    repoURL: https://github.com/darklab8/argocd-cue.git
+    targetRevision: HEAD
+    path: examples/manifests
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cue-manifests
+  project: default
+  syncPolicy:
+    automated: {}
+---
+metadata:
+  name: cue-manifests
+kind: Namespace
+apiVersion: v1
+---
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: cue-helm
+  namespace: argocd
+spec:
+  source:
+    repoURL: https://github.com/darklab8/argocd-cue.git
+    targetRevision: HEAD
+    path: examples/helm
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cue-helm
+  project: default
+  syncPolicy:
+    automated: {}
+---
+metadata:
+  name: cue-helm
+kind: Namespace
+apiVersion: v1
