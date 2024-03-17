@@ -1,10 +1,11 @@
 package sample
 
-import (
-  corev1 "k8s.io/api/core/v1"
-)
+// Not using types to have less dependencies in this project
+// import (
+//   corev1 "k8s.io/api/core/v1"
+// )
 
-#pod: [Name=_]: corev1.#Pod
+// #pod: [Name=_]: corev1.#Pod
 
 #pod: [Name=_]: {
 	apiVersion: "v1"
