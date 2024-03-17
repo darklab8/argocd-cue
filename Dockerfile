@@ -1,8 +1,5 @@
 FROM golang:1.21-bullseye as build
 
-# valid values arm64 or amd64
-ARG ARCH
-
 RUN apt update
 RUN apt install -y build-essential
 RUN apt-get install ca-certificates -y

@@ -50,16 +50,34 @@ tasks:
 
   docker:build:
     cmds:
-      - docker build --tag darkwind8/argocue:${tag_version} .
+      - docker build --tag darkwind8/argocue:${tag_version}-amd64 .
+
+  docker:build:arm:
+    # ubuntu 22.04 amd64: sudo apt install -y qemu-user-static binfmt-support
+    cmds:
+      - docker buildx build --platform linux/arm64 --tag darkwind8/argocue:${tag_version}-arm64 .
 
   docker:push:
     cmds:
-      - docker push darkwind8/argocue:${tag_version}
+      - docker push darkwind8/argocue:${tag_version}-amd64
 
   docker:buildpush:
     cmds:
       - task: docker:build
       - task: docker:push
 
+  docker:buildpusharchs:
+    cmds:
+      - task: docker:build
+      - task: docker:build:arm
+      - task: docker:push
+      - docker push darkwind8/argocue:${tag_version}-arm64
+      - >
+        docker manifest create
+        darkwind8/argocue:${tag_version}
+        --amend darkwind8/argocue:${tag_version}-amd64
+        --amend darkwind8/argocue:${tag_version}-arm64
+      - docker manifest push darkwind8/argocue:${tag_version}
+
 env:
-  tag_version: v0.2.1
+  tag_version: v0.2.2
