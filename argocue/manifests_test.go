@@ -14,3 +14,8 @@ func TestManifests(t *testing.T) {
 	manifests_folder := utils_filepath.Join(ProjectRoot, "examples", "manifests")
 	RenderManifest(utils_types.FilePath(manifests_folder))
 }
+
+func TestManifestsParams(t *testing.T) {
+	manifests_folder := utils_filepath.Join(ProjectRoot, "examples", "manifests")
+	GetManifestsParameters(utils_types.FilePath(manifests_folder))
+}

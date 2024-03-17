@@ -9,7 +9,7 @@ import (
 
 func Run(workdir utils_types.FilePath, command Command) {
 
-	package_type := IdentifyPackage(workdir)
+	package_type := pack.IdentifyPackage(workdir)
 
 	switch package_type {
 	case pack.Manifests:
