@@ -14,7 +14,7 @@ import (
 )
 
 func HelmLoadDeps(workdir utils_types.FilePath) {
-	build := exec.Command("helm", "dep", "build")
+	build := exec.Command("helm", "dep", "update")
 	build.Dir = workdir.ToString()
 	build_out, err := build.Output()
 
