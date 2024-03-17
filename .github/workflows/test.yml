@@ -26,5 +26,9 @@ jobs:
             | tar xz
             && mv cue /usr/local/bin/cue
             && chmod +x /usr/local/bin/cue
+
+      - uses: azure/setup-helm@v4.1.0
+        id: install
+
       - name: Test
         run: task app:test
