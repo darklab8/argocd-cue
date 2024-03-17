@@ -41,3 +41,25 @@ metadata:
   name: cue-helm
 kind: Namespace
 apiVersion: v1
+---
+kind: Application
+apiVersion: argoproj.io/v1alpha1
+metadata:
+  name: cue-helm-with-deps
+  namespace: argocd
+spec:
+  source:
+    repoURL: https://github.com/darklab8/argocue.git
+    targetRevision: HEAD
+    path: examples/helm-with-deps
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cue-helm-with-deps
+  project: default
+  syncPolicy:
+    automated: {}
+---
+metadata:
+  name: cue-helm-with-deps
+kind: Namespace
+apiVersion: v1
