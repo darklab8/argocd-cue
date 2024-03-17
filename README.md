@@ -4,7 +4,8 @@ Argo cd plugin to support cue language.
 
 # Examples
 
-[See folder examples](examples)
+- [See folder examples](examples)
+- [find more examples in repo infra/k8s/modules](https://github.com/darklab8/infra/tree/master/k8s/modules)
 
 # Features
 
