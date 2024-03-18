@@ -36,28 +36,30 @@ func RenderHelm(workdir utils_types.FilePath) {
 	templating_commands := []string{"template"}
 
 	if app_namespace, ok := os.LookupEnv("ARGOCD_APP_NAMESPACE"); ok && app_namespace != "" {
-		logus.Log.Info("found ARGOCD_APP_NAMESPACE", typelog.String("ARGOCD_APP_NAMESPACE", app_namespace))
+		logus.LogFile.Info("found ARGOCD_APP_NAMESPACE", typelog.String("ARGOCD_APP_NAMESPACE", app_namespace))
 		templating_commands = append(templating_commands, fmt.Sprintf("--namespace=%s", app_namespace))
 	}
 
 	if app_name, ok := os.LookupEnv("ARGOCD_APP_NAME"); ok && app_name != "" {
-		logus.Log.Info("found ARGOCD_APP_NAME", typelog.String("ARGOCD_APP_NAME", app_name))
+		logus.LogFile.Info("found ARGOCD_APP_NAME", typelog.String("ARGOCD_APP_NAME", app_name))
 		templating_commands = append(templating_commands, fmt.Sprintf("--name-template=%s", app_name))
 	}
 
 	if app_parameters, ok := os.LookupEnv("ARGOCD_APP_PARAMETERS"); ok && app_parameters != "" {
 		// TODO consider to account later in some flexible enough way ^_^. for manifests and helms
-		logus.Log.Info("found ARGOCD_APP_PARAMETERS", typelog.String("ARGOCD_APP_PARAMETERS", app_parameters))
+		logus.LogFile.Info("found ARGOCD_APP_PARAMETERS", typelog.String("ARGOCD_APP_PARAMETERS", app_parameters))
 	}
 
 	typeloged_envs := []typelog.LogType{}
 	for _, env := range os.Environ() {
-		value := strings.Split(env, "=")
-		if len(value) == 2 {
-			typeloged_envs = append(typeloged_envs, typelog.String(value[0], value[1]))
+		values := strings.Split(env, "=")
+		key := values[0]
+		value := values[1]
+		if len(value) == 2 && strings.Contains(key, "ARGOCD") {
+			typeloged_envs = append(typeloged_envs, typelog.String(key, value))
 		}
 	}
-	logus.Log.Info("all envs", typeloged_envs...)
+	logus.LogFile.Info("all envs", typeloged_envs...)
 
 	templating_commands = append(templating_commands, ".")
 
@@ -85,12 +87,12 @@ func GetHelmParameters(workdir utils_types.FilePath) {
 
 	yfile, err := os.ReadFile(utils_filepath.Join(workdir, "values.yaml").ToString())
 
-	logus.Log.CheckFatal(err, "Failed to read values")
+	logus.LogStdout.CheckFatal(err, "Failed to read values")
 
 	err2 := yaml.Unmarshal(yfile, &data)
-	logus.Log.CheckFatal(err2, "failed to unmarshal yaml")
+	logus.LogStdout.CheckFatal(err2, "failed to unmarshal yaml")
 
 	jsoned, err := json.Marshal(NewHelmParams(data))
-	logus.Log.CheckWarn(err, "not able to marshal params")
+	logus.LogStdout.CheckWarn(err, "not able to marshal params")
 	fmt.Println(string(jsoned))
 }

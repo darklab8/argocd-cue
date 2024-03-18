@@ -12,10 +12,10 @@ import (
 func main() {
 	argsWithoutProg := os.Args[1:]
 	if len(argsWithoutProg) != 1 {
-		logus.Log.Fatal("expected one of valid commands", typelog.Any("commands", argocue.Commands))
+		logus.LogStdout.Fatal("expected one of valid commands", typelog.Any("commands", argocue.Commands))
 	}
 
 	workdir, err := os.Getwd()
-	logus.Log.CheckFatal(err, "failed to get workdir")
+	logus.LogStdout.CheckFatal(err, "failed to get workdir")
 	argocue.Run(utils_types.FilePath(workdir), argocue.Command(argsWithoutProg[0]))
 }

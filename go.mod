@@ -3,7 +3,7 @@ module github.com/darklab8/argocd-cue
 go 1.21.1
 
 require (
-	github.com/darklab8/go-typelog v0.5.0
+	github.com/darklab8/go-typelog v0.6.0
 	github.com/darklab8/go-utils v0.11.1
 	github.com/stretchr/testify v1.9.0
 	gopkg.in/yaml.v3 v3.0.1

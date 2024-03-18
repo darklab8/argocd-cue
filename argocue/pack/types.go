@@ -18,7 +18,7 @@ const (
 
 func containsAnyFile(workdir utils_types.FilePath, filename string) bool {
 	files, err := os.ReadDir(workdir.ToString())
-	logus.Log.CheckFatal(err, "contains any file")
+	logus.LogStdout.CheckFatal(err, "contains any file")
 
 	for _, file := range files {
 		if strings.Contains(file.Name(), filename) {
@@ -37,7 +37,7 @@ func IdentifyPackage(workdir utils_types.FilePath) PackageType {
 		return Manifests
 	}
 
-	logus.Log.Panic(
+	logus.LogStdout.Panic(
 		"not recognized package type, expected package file",
 		typelog.String("manifests_package_identifier", string(Manifests)),
 		typelog.String("Helm_package_identifier", string(Helm)),

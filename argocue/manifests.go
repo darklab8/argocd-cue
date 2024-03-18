@@ -31,6 +31,6 @@ func NewManifestsParams(Map map[string]interface{}) []ApplicationParams {
 
 func GetManifestsParameters(workdir utils_types.FilePath) {
 	jsoned, err := json.Marshal(NewManifestsParams(map[string]interface{}{}))
-	logus.Log.CheckWarn(err, "not able to marshal params")
+	logus.LogStdout.CheckWarn(err, "not able to marshal params")
 	fmt.Println(string(jsoned))
 }

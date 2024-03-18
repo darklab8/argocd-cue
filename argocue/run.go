@@ -26,7 +26,7 @@ func Run(workdir utils_types.FilePath, command Command) {
 				GetManifestsParameters(workdir)
 			}
 		default:
-			logus.Log.Fatal("not chosen command", typelog.Any("commands", Commands))
+			logus.LogStdout.Fatal("not chosen command", typelog.Any("commands", Commands))
 		}
 
 	case pack.Helm:
@@ -40,11 +40,11 @@ func Run(workdir utils_types.FilePath, command Command) {
 				GetHelmParameters(workdir)
 			}
 		default:
-			logus.Log.Fatal("not chosen command", typelog.Any("commands", Commands))
+			logus.LogStdout.Fatal("not chosen command", typelog.Any("commands", Commands))
 		}
 
 	default:
-		logus.Log.Fatal("not recognized package type")
+		logus.LogStdout.Fatal("not recognized package type")
 	}
 
 }
@@ -52,21 +52,21 @@ func Run(workdir utils_types.FilePath, command Command) {
 func HandleCmdError(out []byte, err error, msg string) {
 	if err != nil {
 		if err, ok := err.(*exec.ExitError); ok {
-			logus.Log.CheckPanic(err,
+			logus.LogStdout.CheckPanic(err,
 				msg,
 				typelog.String("stdout", string(out)),
 				typelog.String("stderr", string(err.Stderr)),
 			)
 		}
 		if err, ok := err.(*exec.Error); ok {
-			logus.Log.CheckPanic(err,
+			logus.LogStdout.CheckPanic(err,
 				msg,
 				typelog.String("stdout", string(out)),
 				typelog.String("stderr", string(err.Error())),
 			)
 		}
 
-		logus.Log.CheckPanic(err,
+		logus.LogStdout.CheckPanic(err,
 			msg,
 			typelog.String("stdout", string(out)),
 			typelog.String("stderr", string(err.Error())),
