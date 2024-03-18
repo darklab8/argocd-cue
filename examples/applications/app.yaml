@@ -37,10 +37,9 @@ spec:
     path: examples/helm
     plugin:
       parameters:
-        - name: "argocd-cue-parameters"
+        - name: "helm_parameters"
           map:
-            template_args:
-              - --name-template=mycustomname
+            release_name: mycustomname
   destination:
     server: https://kubernetes.default.svc
     namespace: cue-helm

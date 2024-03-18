@@ -43,6 +43,14 @@ func (h Helm) Generate(workdir utils_types.FilePath) {
 
 	templating_commands = append(templating_commands, h.parameters.HelmTemplateArgs...)
 
+	if h.parameters.HelmParameters.HelmNamespace != nil {
+		templating_commands = append(templating_commands, fmt.Sprintf("--namespace=%s", *h.parameters.HelmParameters.HelmNamespace))
+	}
+
+	if h.parameters.HelmParameters.HelmReleaseName != nil {
+		templating_commands = append(templating_commands, fmt.Sprintf("--name-template=%s", *h.parameters.HelmParameters.HelmReleaseName))
+	}
+
 	templating_commands = append(templating_commands, ".")
 
 	cmd := exec.Command(command_exec, templating_commands...)
