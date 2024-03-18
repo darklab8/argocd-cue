@@ -7,6 +7,7 @@ import (
 
 	"github.com/darklab8/argocd-cue/argocue/logus"
 	"github.com/darklab8/argocd-cue/argocue/types"
+	"github.com/darklab8/argocd-cue/argocue/utils"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
 
@@ -20,7 +21,7 @@ func (m Manifests) Generate(workdir utils_types.FilePath) {
 	cmd.Dir = workdir.ToString()
 	out, err := cmd.Output()
 
-	types.HandleCmdError(out, err, "failed to run cue cmd dump")
+	utils.HandleCmdError(out, err, "failed to run cue cmd dump")
 	fmt.Println(string(out))
 }
 

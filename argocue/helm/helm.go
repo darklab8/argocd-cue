@@ -10,6 +10,7 @@ import (
 
 	"github.com/darklab8/argocd-cue/argocue/logus"
 	"github.com/darklab8/argocd-cue/argocue/types"
+	"github.com/darklab8/argocd-cue/argocue/utils"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/goutils/utils/utils_filepath"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
@@ -25,14 +26,14 @@ func helmLoadDeps(workdir utils_types.FilePath) {
 	build := exec.Command("helm", "dep", "update", "--kube-insecure-skip-tls-verify")
 	build.Dir = workdir.ToString()
 	build_out, err := build.Output()
-	types.HandleCmdError(build_out, err, "failed to run helm dep update")
+	utils.HandleCmdError(build_out, err, "failed to run helm dep update")
 }
 
 func buildHelm(workdir utils_types.FilePath) {
 	build := exec.Command("cue", "cmd", "build")
 	build.Dir = workdir.ToString()
 	build_out, err := build.Output()
-	types.HandleCmdError(build_out, err, "failed to cue cmd build")
+	utils.HandleCmdError(build_out, err, "failed to cue cmd build")
 }
 
 type ParameterGroup struct {
@@ -87,7 +88,7 @@ func (h Helm) Generate(workdir utils_types.FilePath) {
 	cmd := exec.Command(command_exec, templating_commands...)
 	cmd.Dir = workdir.ToString()
 	out, err := cmd.Output()
-	types.HandleCmdError(out, err, "failed to helm template")
+	utils.HandleCmdError(out, err, "failed to helm template")
 	fmt.Println(string(out))
 }
 
