@@ -8,3 +8,7 @@ chart: {
     version: "0.1.0"
     appVersion: "beta"
 }
+
+values: {
+    your_variable: "your_variable"
+}
