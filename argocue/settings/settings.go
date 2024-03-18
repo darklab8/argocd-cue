@@ -29,13 +29,15 @@ const (
 )
 
 type AppParameters struct {
-	// Commented stuff for to be implemented a bit in a future
 	HelmTemplateArgs []string
 	CommonParameters struct {
+		// TODO Not yet having effect, but it will be
 		CueVersion *string `json:"cue_version"`
 	}
 	HelmParameters struct {
-		HelmVersion      *string `json:"helm_version"`
+		// TODO Not yet having effect, but it will be
+		HelmVersion *string `json:"helm_version"`
+
 		HelmNameTemplate *string `json:"name_template"`
 		HelmNamespace    *string `json:"namespace"`
 	}
