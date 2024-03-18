@@ -35,19 +35,21 @@ func RenderHelm(workdir utils_types.FilePath) {
 	command_exec := "helm"
 	templating_commands := []string{"template"}
 
-	if app_namespace, ok := os.LookupEnv("ARGOCD_APP_NAMESPACE"); ok && app_namespace != "" {
-		logus.LogFile.Info("found ARGOCD_APP_NAMESPACE", typelog.String("ARGOCD_APP_NAMESPACE", app_namespace))
-		templating_commands = append(templating_commands, fmt.Sprintf("--namespace=%s", app_namespace))
-	}
-
-	if app_name, ok := os.LookupEnv("ARGOCD_APP_NAME"); ok && app_name != "" {
-		logus.LogFile.Info("found ARGOCD_APP_NAME", typelog.String("ARGOCD_APP_NAME", app_name))
-		templating_commands = append(templating_commands, fmt.Sprintf("--name-template=%s", app_name))
-	}
-
 	if app_parameters, ok := os.LookupEnv("ARGOCD_APP_PARAMETERS"); ok && app_parameters != "" {
-		// TODO consider to account later in some flexible enough way ^_^. for manifests and helms
 		logus.LogFile.Info("found ARGOCD_APP_PARAMETERS", typelog.String("ARGOCD_APP_PARAMETERS", app_parameters))
+
+		parameters := make(map[string]interface{})
+		err := json.Unmarshal([]byte(app_parameters), &parameters)
+		if !logus.LogFile.CheckWarn(err, "failed to unmarshal args") {
+			if value, ok := parameters["helm-template-args"]; ok {
+				parameters_map := value.(map[string]string)
+				typeloged_envs := []typelog.LogType{}
+				for key, value := range parameters_map {
+					typeloged_envs = append(typeloged_envs, typelog.String(key, value))
+				}
+				logus.LogFile.Info("all parameters", typeloged_envs...)
+			}
+		}
 	}
 
 	typeloged_envs := []typelog.LogType{}
