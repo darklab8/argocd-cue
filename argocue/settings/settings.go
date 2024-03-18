@@ -16,6 +16,7 @@ type GetParameters struct {
 	Map            map[string]string `json:"map"`
 }
 
+/*AppParameterGroup importable into Cue too*/
 type AppParameterGroup struct {
 	Name  string            `json:"name"`
 	Map   map[string]string `json:"map,omitempty"`
@@ -28,6 +29,7 @@ const (
 	APP_PARAMETER_HELM_PARAMETERS_KEY    = "helm_parameters"
 )
 
+/*AppParameters is importable for static typing by Cue ^_^*/
 type AppParameters struct {
 	HelmTemplateArgs []string
 	CommonParameters struct {
