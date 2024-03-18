@@ -6,6 +6,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/darklab8/argocd-cue/argocue/settings"
 	"github.com/darklab8/argocd-cue/argocue/utils"
 	"github.com/darklab8/go-utils/goutils/utils/utils_filepath"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
@@ -27,11 +28,12 @@ func CleanFromYaml(manifests_folder utils_types.FilePath) {
 func TestHelm(t *testing.T) {
 	manifests_folder := utils_filepath.Join(utils.ProjectRoot, "examples", "helm")
 	CleanFromYaml(manifests_folder)
-	NewHelm().Generate(utils_types.FilePath(manifests_folder))
+
+	NewHelm(settings.NewApplication()).Generate(utils_types.FilePath(manifests_folder))
 }
 
 func TestHelmParams(t *testing.T) {
 	manifests_folder := utils_filepath.Join(utils.ProjectRoot, "examples", "helm")
 	CleanFromYaml(manifests_folder)
-	NewHelm().GetParameters(utils_types.FilePath(manifests_folder))
+	NewHelm(settings.NewApplication()).GetParameters(utils_types.FilePath(manifests_folder))
 }

@@ -5,22 +5,20 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strconv"
-	"strings"
 
 	"github.com/darklab8/argocd-cue/argocue/logus"
 	"github.com/darklab8/argocd-cue/argocue/settings"
 	"github.com/darklab8/argocd-cue/argocue/utils"
-	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/goutils/utils/utils_filepath"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 	"gopkg.in/yaml.v3"
 )
 
 type Helm struct {
+	parameters *settings.ApplicationParameters
 }
 
-func NewHelm() Helm { return Helm{} }
+func NewHelm(parameters *settings.ApplicationParameters) Helm { return Helm{parameters: parameters} }
 
 func helmLoadDeps(workdir utils_types.FilePath) {
 	build := exec.Command("helm", "dep", "update", "--kube-insecure-skip-tls-verify")
@@ -43,40 +41,7 @@ func (h Helm) Generate(workdir utils_types.FilePath) {
 	command_exec := "helm"
 	templating_commands := []string{"template"}
 
-	if app_parameters, ok := os.LookupEnv("ARGOCD_APP_PARAMETERS"); ok && app_parameters != "" {
-		logus.LogFile.Info("found ARGOCD_APP_PARAMETERS", typelog.String("ARGOCD_APP_PARAMETERS", app_parameters))
-
-		var parameter_groups []settings.ParameterGroup = make([]settings.ParameterGroup, 0)
-		err := json.Unmarshal([]byte(app_parameters), &parameter_groups)
-		if !logus.LogFile.CheckWarn(err, "failed to unmarshal paramaeters") {
-			logus.LogFile.Info("succesfully unmarhslaed", typelog.Int("len(parameter_groups)", len(parameter_groups)))
-
-			for _, parameteter_group := range parameter_groups {
-				logus.LogFile.Info("found parameter group", typelog.String("name", parameteter_group.Name))
-				if parameteter_group.Name == "helm-template-args" {
-					logus.LogFile.Info("found helm-template-args", typelog.Items("array", parameteter_group.Array))
-					typeloged_envs := []typelog.LogType{}
-					for i, value := range parameteter_group.Array {
-						typeloged_envs = append(typeloged_envs, typelog.String(strconv.Itoa(i), value))
-					}
-					logus.LogFile.Info("all parameters", typeloged_envs...)
-
-					templating_commands = append(templating_commands, parameteter_group.Array...)
-				}
-			}
-		}
-	}
-
-	typeloged_envs := []typelog.LogType{}
-	for _, env := range os.Environ() {
-		values := strings.Split(env, "=")
-		key := values[0]
-		value := values[1]
-		if len(value) == 2 && strings.Contains(key, "ARGOCD") {
-			typeloged_envs = append(typeloged_envs, typelog.String(key, value))
-		}
-	}
-	logus.LogFile.Info("all envs", typeloged_envs...)
+	templating_commands = append(templating_commands, h.parameters.Helm.TemplateArgs...)
 
 	templating_commands = append(templating_commands, ".")
 
@@ -87,8 +52,8 @@ func (h Helm) Generate(workdir utils_types.FilePath) {
 	fmt.Println(string(out))
 }
 
-func newHelmParams(Map map[string]interface{}) []settings.ApplicationParams {
-	return []settings.ApplicationParams{
+func newHelmParams(Map map[string]interface{}) []settings.GetParameters {
+	return []settings.GetParameters{
 		{
 			Name:           "helm-parameters",
 			Title:          "Helm Parameters",

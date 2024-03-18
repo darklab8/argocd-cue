@@ -15,16 +15,16 @@ type Deployment interface {
 	GetParameters(utils_types.FilePath)
 }
 
-func Run(workdir utils_types.FilePath, command settings.Command) {
+func Run(parameters *settings.ApplicationParameters, workdir utils_types.FilePath, command settings.Command) {
 
 	package_type := identifier.IdentifyDeployment(workdir)
 	var deployment Deployment
 
 	switch package_type {
 	case identifier.Manifests:
-		deployment = manifests.NewManifests()
+		deployment = manifests.NewManifests(parameters)
 	case identifier.Helm:
-		deployment = helm.NewHelm()
+		deployment = helm.NewHelm(parameters)
 	default:
 		logus.LogStdout.Fatal("not recognized package type")
 	}

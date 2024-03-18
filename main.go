@@ -18,5 +18,10 @@ func main() {
 
 	workdir, err := os.Getwd()
 	logus.LogStdout.CheckFatal(err, "failed to get workdir")
-	argocue.Run(utils_types.FilePath(workdir), settings.Command(argsWithoutProg[0]))
+
+	parameters := settings.NewApplication()
+	parameters.Load()
+
+	argocue.Run(parameters, utils_types.FilePath(workdir), settings.Command(argsWithoutProg[0]))
+
 }

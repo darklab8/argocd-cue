@@ -30,6 +30,12 @@ spec:
     repoURL: https://github.com/darklab8/argocd-cue.git
     targetRevision: HEAD
     path: examples/helm
+    plugin:
+      parameters:
+        - name: "argocd-cue-parameters"
+          map:
+            template_args:
+              - --name-template=mycustomname
   destination:
     server: https://kubernetes.default.svc
     namespace: cue-helm

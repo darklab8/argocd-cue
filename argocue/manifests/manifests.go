@@ -12,9 +12,12 @@ import (
 )
 
 type Manifests struct {
+	parameters *settings.ApplicationParameters
 }
 
-func NewManifests() Manifests { return Manifests{} }
+func NewManifests(parameters *settings.ApplicationParameters) Manifests {
+	return Manifests{parameters: parameters}
+}
 
 func (m Manifests) Generate(workdir utils_types.FilePath) {
 	cmd := exec.Command("cue", "cmd", "dump")
@@ -25,8 +28,8 @@ func (m Manifests) Generate(workdir utils_types.FilePath) {
 	fmt.Println(string(out))
 }
 
-func mewManifestsParams(Map map[string]interface{}) []settings.ApplicationParams {
-	return []settings.ApplicationParams{
+func mewManifestsParams(Map map[string]interface{}) []settings.GetParameters {
+	return []settings.GetParameters{
 		{
 			Name:           "manifests-parameters",
 			Title:          "Manifests Parameters",
