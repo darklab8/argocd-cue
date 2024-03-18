@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/darklab8/argocd-cue/argocue/logus"
 	"github.com/darklab8/go-typelog/typelog"
@@ -48,6 +49,15 @@ func RenderHelm(workdir utils_types.FilePath) {
 		// TODO consider to account later in some flexible enough way ^_^. for manifests and helms
 		logus.Log.Info("found ARGOCD_APP_PARAMETERS", typelog.String("ARGOCD_APP_PARAMETERS", app_parameters))
 	}
+
+	typeloged_envs := []typelog.LogType{}
+	for _, env := range os.Environ() {
+		value := strings.Split(env, "=")
+		if len(value) == 2 {
+			typeloged_envs = append(typeloged_envs, typelog.String(value[0], value[1]))
+		}
+	}
+	logus.Log.Info("all envs", typeloged_envs...)
 
 	templating_commands = append(templating_commands, ".")
 
