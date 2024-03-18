@@ -1,10 +1,11 @@
 package argocue
 
 import (
-	"os/exec"
-
+	"github.com/darklab8/argocd-cue/argocue/helm"
 	"github.com/darklab8/argocd-cue/argocue/identifier"
 	"github.com/darklab8/argocd-cue/argocue/logus"
+	"github.com/darklab8/argocd-cue/argocue/manifests"
+	"github.com/darklab8/argocd-cue/argocue/types"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
@@ -14,51 +15,26 @@ type Deployment interface {
 	GetParameters(utils_types.FilePath)
 }
 
-func Run(workdir utils_types.FilePath, command Command) {
+func Run(workdir utils_types.FilePath, command types.Command) {
 
 	package_type := identifier.IdentifyDeployment(workdir)
 	var deployment Deployment
 
 	switch package_type {
 	case identifier.Manifests:
-		deployment = NewManifests()
+		deployment = manifests.NewManifests()
 	case identifier.Helm:
-		deployment = NewHelm()
+		deployment = helm.NewHelm()
 	default:
 		logus.LogStdout.Fatal("not recognized package type")
 	}
 
 	switch command {
-	case Commands.Generate:
+	case types.Commands.Generate:
 		deployment.Generate(workdir)
-	case Commands.GetParameters:
+	case types.Commands.GetParameters:
 		deployment.GetParameters(workdir)
 	default:
-		logus.LogStdout.Fatal("not chosen command", typelog.Any("commands", Commands))
-	}
-}
-
-func HandleCmdError(out []byte, err error, msg string) {
-	if err != nil {
-		if err, ok := err.(*exec.ExitError); ok {
-			logus.LogStdout.CheckPanic(err,
-				msg,
-				typelog.String("stdout", string(out)),
-				typelog.String("stderr", string(err.Stderr)),
-			)
-		}
-		if err, ok := err.(*exec.Error); ok {
-			logus.LogStdout.CheckPanic(err,
-				msg,
-				typelog.String("stdout", string(out)),
-				typelog.String("stderr", string(err.Error())),
-			)
-		}
-
-		logus.LogStdout.CheckPanic(err,
-			msg,
-			typelog.String("stdout", string(out)),
-			typelog.String("stderr", string(err.Error())),
-		)
+		logus.LogStdout.Fatal("not chosen command", typelog.Any("commands", types.Commands))
 	}
 }

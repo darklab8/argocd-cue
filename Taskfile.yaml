@@ -40,7 +40,7 @@ tasks:
 
   app:test:
     cmds:
-      - go test ./argocue -coverprofile=cover.out {{.CLI_ARGS}}
+      - go test ./argocue/... -coverprofile=cover.out {{.CLI_ARGS}}
 
   app:build:
     cmds:
