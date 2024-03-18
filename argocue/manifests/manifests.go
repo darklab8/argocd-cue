@@ -6,7 +6,7 @@ import (
 	"os/exec"
 
 	"github.com/darklab8/argocd-cue/argocue/logus"
-	"github.com/darklab8/argocd-cue/argocue/types"
+	"github.com/darklab8/argocd-cue/argocue/settings"
 	"github.com/darklab8/argocd-cue/argocue/utils"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
@@ -25,8 +25,8 @@ func (m Manifests) Generate(workdir utils_types.FilePath) {
 	fmt.Println(string(out))
 }
 
-func mewManifestsParams(Map map[string]interface{}) []types.ApplicationParams {
-	return []types.ApplicationParams{
+func mewManifestsParams(Map map[string]interface{}) []settings.ApplicationParams {
+	return []settings.ApplicationParams{
 		{
 			Name:           "manifests-parameters",
 			Title:          "Manifests Parameters",

@@ -9,7 +9,7 @@ import (
 	"strings"
 
 	"github.com/darklab8/argocd-cue/argocue/logus"
-	"github.com/darklab8/argocd-cue/argocue/types"
+	"github.com/darklab8/argocd-cue/argocue/settings"
 	"github.com/darklab8/argocd-cue/argocue/utils"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/goutils/utils/utils_filepath"
@@ -36,11 +36,6 @@ func buildHelm(workdir utils_types.FilePath) {
 	utils.HandleCmdError(build_out, err, "failed to cue cmd build")
 }
 
-type ParameterGroup struct {
-	Name  string   `json:"name"`
-	Array []string `json:"array"`
-}
-
 func (h Helm) Generate(workdir utils_types.FilePath) {
 	buildHelm(workdir)
 	// HelmLoadDeps(workdir) // Not working correctly yet. TODO fix.
@@ -51,7 +46,7 @@ func (h Helm) Generate(workdir utils_types.FilePath) {
 	if app_parameters, ok := os.LookupEnv("ARGOCD_APP_PARAMETERS"); ok && app_parameters != "" {
 		logus.LogFile.Info("found ARGOCD_APP_PARAMETERS", typelog.String("ARGOCD_APP_PARAMETERS", app_parameters))
 
-		var parameter_groups []ParameterGroup = make([]ParameterGroup, 0)
+		var parameter_groups []settings.ParameterGroup = make([]settings.ParameterGroup, 0)
 		err := json.Unmarshal([]byte(app_parameters), &parameter_groups)
 		if !logus.LogFile.CheckWarn(err, "failed to unmarshal paramaeters") {
 			logus.LogFile.Info("succesfully unmarhslaed", typelog.Int("len(parameter_groups)", len(parameter_groups)))
@@ -92,8 +87,8 @@ func (h Helm) Generate(workdir utils_types.FilePath) {
 	fmt.Println(string(out))
 }
 
-func newHelmParams(Map map[string]interface{}) []types.ApplicationParams {
-	return []types.ApplicationParams{
+func newHelmParams(Map map[string]interface{}) []settings.ApplicationParams {
+	return []settings.ApplicationParams{
 		{
 			Name:           "helm-parameters",
 			Title:          "Helm Parameters",
