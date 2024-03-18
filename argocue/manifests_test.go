@@ -12,10 +12,10 @@ var ProjectRoot = utils_filepath.Dir(utils.GetCurrentFolder())
 
 func TestManifests(t *testing.T) {
 	manifests_folder := utils_filepath.Join(ProjectRoot, "examples", "manifests")
-	RenderManifest(utils_types.FilePath(manifests_folder))
+	NewManifests().Generate(utils_types.FilePath(manifests_folder))
 }
 
 func TestManifestsParams(t *testing.T) {
 	manifests_folder := utils_filepath.Join(ProjectRoot, "examples", "manifests")
-	GetManifestsParameters(utils_types.FilePath(manifests_folder))
+	NewManifests().GetParameters(utils_types.FilePath(manifests_folder))
 }

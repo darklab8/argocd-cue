@@ -9,44 +9,33 @@ import (
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
 
+type Deployment interface {
+	Generate(utils_types.FilePath)
+	GetParameters(utils_types.FilePath)
+}
+
 func Run(workdir utils_types.FilePath, command Command) {
 
 	package_type := pack.IdentifyPackage(workdir)
+	var deployment Deployment
 
 	switch package_type {
 	case pack.Manifests:
-
-		switch command {
-		case Commands.Generate:
-			{
-				RenderManifest(workdir)
-			}
-		case Commands.GetParameters:
-			{
-				GetManifestsParameters(workdir)
-			}
-		default:
-			logus.LogStdout.Fatal("not chosen command", typelog.Any("commands", Commands))
-		}
-
+		deployment = NewManifests()
 	case pack.Helm:
-		switch command {
-		case Commands.Generate:
-			{
-				RenderHelm(workdir)
-			}
-		case Commands.GetParameters:
-			{
-				GetHelmParameters(workdir)
-			}
-		default:
-			logus.LogStdout.Fatal("not chosen command", typelog.Any("commands", Commands))
-		}
-
+		deployment = NewHelm()
 	default:
 		logus.LogStdout.Fatal("not recognized package type")
 	}
 
+	switch command {
+	case Commands.Generate:
+		deployment.Generate(workdir)
+	case Commands.GetParameters:
+		deployment.GetParameters(workdir)
+	default:
+		logus.LogStdout.Fatal("not chosen command", typelog.Any("commands", Commands))
+	}
 }
 
 func HandleCmdError(out []byte, err error, msg string) {

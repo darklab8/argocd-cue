@@ -9,7 +9,12 @@ import (
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
 
-func RenderManifest(workdir utils_types.FilePath) {
+type Manifests struct {
+}
+
+func NewManifests() Manifests { return Manifests{} }
+
+func (m Manifests) Generate(workdir utils_types.FilePath) {
 	cmd := exec.Command("cue", "cmd", "dump")
 	cmd.Dir = workdir.ToString()
 	out, err := cmd.Output()
@@ -18,7 +23,7 @@ func RenderManifest(workdir utils_types.FilePath) {
 	fmt.Println(string(out))
 }
 
-func NewManifestsParams(Map map[string]interface{}) []ApplicationParams {
+func mewManifestsParams(Map map[string]interface{}) []ApplicationParams {
 	return []ApplicationParams{
 		{
 			Name:           "manifests-parameters",
@@ -29,8 +34,8 @@ func NewManifestsParams(Map map[string]interface{}) []ApplicationParams {
 	}
 }
 
-func GetManifestsParameters(workdir utils_types.FilePath) {
-	jsoned, err := json.Marshal(NewManifestsParams(map[string]interface{}{}))
+func (m Manifests) GetParameters(workdir utils_types.FilePath) {
+	jsoned, err := json.Marshal(mewManifestsParams(map[string]interface{}{}))
 	logus.LogStdout.CheckWarn(err, "not able to marshal params")
 	fmt.Println(string(jsoned))
 }

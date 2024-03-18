@@ -15,14 +15,19 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-func HelmLoadDeps(workdir utils_types.FilePath) {
+type Helm struct {
+}
+
+func NewHelm() Helm { return Helm{} }
+
+func helmLoadDeps(workdir utils_types.FilePath) {
 	build := exec.Command("helm", "dep", "update", "--kube-insecure-skip-tls-verify")
 	build.Dir = workdir.ToString()
 	build_out, err := build.Output()
 	HandleCmdError(build_out, err, "failed to run helm dep update")
 }
 
-func BuildHelm(workdir utils_types.FilePath) {
+func buildHelm(workdir utils_types.FilePath) {
 	build := exec.Command("cue", "cmd", "build")
 	build.Dir = workdir.ToString()
 	build_out, err := build.Output()
@@ -34,8 +39,8 @@ type ParameterGroup struct {
 	Array []string `json:"array"`
 }
 
-func RenderHelm(workdir utils_types.FilePath) {
-	BuildHelm(workdir)
+func (h Helm) Generate(workdir utils_types.FilePath) {
+	buildHelm(workdir)
 	// HelmLoadDeps(workdir) // Not working correctly yet. TODO fix.
 
 	command_exec := "helm"
@@ -85,7 +90,7 @@ func RenderHelm(workdir utils_types.FilePath) {
 	fmt.Println(string(out))
 }
 
-func NewHelmParams(Map map[string]interface{}) []ApplicationParams {
+func newHelmParams(Map map[string]interface{}) []ApplicationParams {
 	return []ApplicationParams{
 		{
 			Name:           "helm-parameters",
@@ -96,8 +101,8 @@ func NewHelmParams(Map map[string]interface{}) []ApplicationParams {
 	}
 }
 
-func GetHelmParameters(workdir utils_types.FilePath) {
-	BuildHelm(workdir)
+func (h Helm) GetParameters(workdir utils_types.FilePath) {
+	buildHelm(workdir)
 	data := make(map[string]interface{})
 
 	yfile, err := os.ReadFile(utils_filepath.Join(workdir, "values.yaml").ToString())
@@ -107,7 +112,7 @@ func GetHelmParameters(workdir utils_types.FilePath) {
 	err2 := yaml.Unmarshal(yfile, &data)
 	logus.LogStdout.CheckFatal(err2, "failed to unmarshal yaml")
 
-	jsoned, err := json.Marshal(NewHelmParams(data))
+	jsoned, err := json.Marshal(newHelmParams(data))
 	logus.LogStdout.CheckWarn(err, "not able to marshal params")
 	fmt.Println(string(jsoned))
 }
