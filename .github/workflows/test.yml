@@ -2,14 +2,12 @@ name: Test
 
 on:
   push:
-    branches: ["master"]
   schedule:
     # every sunday
     - cron: '0 10 1 * *'
 
 jobs:
   test:
-    name: unit-testing
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
