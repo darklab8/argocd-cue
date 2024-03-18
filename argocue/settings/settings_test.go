@@ -13,7 +13,7 @@ func TestLoadSettings(t *testing.T) {
 	app := NewParameters()
 	app.loadData(data)
 
-	assert.Greater(t, app.HelmTemplateArgs, 0)
+	assert.Greater(t, len(app.HelmTemplateArgs), 0)
 }
 
 func TestLoadHelmParams(t *testing.T) {
