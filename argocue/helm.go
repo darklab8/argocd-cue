@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 
 	"github.com/darklab8/argocd-cue/argocue/logus"
@@ -46,15 +47,16 @@ func RenderHelm(workdir utils_types.FilePath) {
 			} else {
 				parameters := parameter_groups[0]
 				if value, ok := parameters["helm-template-args"]; ok {
-					parameters_map := value.(map[string]string)
+					parameters_map := value.([]string)
 					typeloged_envs := []typelog.LogType{}
-					for key, value := range parameters_map {
-						typeloged_envs = append(typeloged_envs, typelog.String(key, value))
+					for i, value := range parameters_map {
+						typeloged_envs = append(typeloged_envs, typelog.String(strconv.Itoa(i), value))
 					}
 					logus.LogFile.Info("all parameters", typeloged_envs...)
+
+					templating_commands = append(templating_commands, parameters_map...)
 				}
 			}
-
 		}
 	}
 
