@@ -1,75 +1,40 @@
 package argocue
 
 import (
-	"os/exec"
-
+	"github.com/darklab8/argocd-cue/argocue/helm"
+	"github.com/darklab8/argocd-cue/argocue/identifier"
 	"github.com/darklab8/argocd-cue/argocue/logus"
-	"github.com/darklab8/argocd-cue/argocue/pack"
+	"github.com/darklab8/argocd-cue/argocue/manifests"
+	"github.com/darklab8/argocd-cue/argocue/settings"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
 
-func Run(workdir utils_types.FilePath, command Command) {
+type Deployment interface {
+	Generate(utils_types.FilePath)
+	GetParameters(utils_types.FilePath)
+}
 
-	package_type := pack.IdentifyPackage(workdir)
+func Run(parameters *settings.AppParameters, workdir utils_types.FilePath, command settings.Command) {
+
+	package_type := identifier.IdentifyDeployment(workdir)
+	var deployment Deployment
 
 	switch package_type {
-	case pack.Manifests:
-
-		switch command {
-		case Commands.Generate:
-			{
-				RenderManifest(workdir)
-			}
-		case Commands.GetParameters:
-			{
-				GetManifestsParameters(workdir)
-			}
-		default:
-			logus.LogStdout.Fatal("not chosen command", typelog.Any("commands", Commands))
-		}
-
-	case pack.Helm:
-		switch command {
-		case Commands.Generate:
-			{
-				RenderHelm(workdir)
-			}
-		case Commands.GetParameters:
-			{
-				GetHelmParameters(workdir)
-			}
-		default:
-			logus.LogStdout.Fatal("not chosen command", typelog.Any("commands", Commands))
-		}
-
+	case identifier.Manifests:
+		deployment = manifests.NewManifests(parameters)
+	case identifier.Helm:
+		deployment = helm.NewHelm(parameters)
 	default:
 		logus.LogStdout.Fatal("not recognized package type")
 	}
 
-}
-
-func HandleCmdError(out []byte, err error, msg string) {
-	if err != nil {
-		if err, ok := err.(*exec.ExitError); ok {
-			logus.LogStdout.CheckPanic(err,
-				msg,
-				typelog.String("stdout", string(out)),
-				typelog.String("stderr", string(err.Stderr)),
-			)
-		}
-		if err, ok := err.(*exec.Error); ok {
-			logus.LogStdout.CheckPanic(err,
-				msg,
-				typelog.String("stdout", string(out)),
-				typelog.String("stderr", string(err.Error())),
-			)
-		}
-
-		logus.LogStdout.CheckPanic(err,
-			msg,
-			typelog.String("stdout", string(out)),
-			typelog.String("stderr", string(err.Error())),
-		)
+	switch command {
+	case settings.Commands.Generate:
+		deployment.Generate(workdir)
+	case settings.Commands.GetParameters:
+		deployment.GetParameters(workdir)
+	default:
+		logus.LogStdout.Fatal("not chosen command", typelog.Any("commands", settings.Commands))
 	}
 }

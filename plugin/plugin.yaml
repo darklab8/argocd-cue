@@ -9,9 +9,5 @@ spec:
   discover:
     fileName: "./*.cue"
   parameters:
-    static:
-      - name: values-files
-        title: VALUES FILES
-        collectionType: array
     dynamic:
       command: [argocue, get_parameters]

@@ -20,6 +20,11 @@ metadata:
 kind: Namespace
 apiVersion: v1
 ---
+metadata:
+  name: cue-helm
+kind: Namespace
+apiVersion: v1
+---
 kind: Application
 apiVersion: argoproj.io/v1alpha1
 metadata:
@@ -30,6 +35,11 @@ spec:
     repoURL: https://github.com/darklab8/argocd-cue.git
     targetRevision: HEAD
     path: examples/helm
+    plugin:
+      parameters:
+        - name: "helm_parameters"
+          map:
+            release_name: mycustomname
   destination:
     server: https://kubernetes.default.svc
     namespace: cue-helm

@@ -7,6 +7,10 @@ Argo cd plugin to support cue language.
 - [See folder examples](examples)
 - [find more examples in repo infra/k8s/modules](https://github.com/darklab8/infra/tree/master/k8s/modules)
 
+Your can pass extra parameters into argocd application declarations to customize deployments!
+- That is necessary to customize `helm template` result with extra args
+- [You can find examples here](https://github.com/darklab8/infra/tree/master/k8s/production)
+
 # Features
 
 - you can use this plugin and cue to implement

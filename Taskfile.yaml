@@ -31,7 +31,8 @@ tasks:
 
   argo:delete:
     cmds:
-      - kubectl delete -k ./plugin
+      - kubectl delete -k ./plugin | true
+      - kubectl delete -f ./examples/applications | true
 
   argo:apply:
     desc: try deploying cue application
@@ -40,7 +41,7 @@ tasks:
 
   app:test:
     cmds:
-      - go test ./argocue -coverprofile=cover.out {{.CLI_ARGS}}
+      - go test ./argocue/... -coverprofile=cover.out {{.CLI_ARGS}}
 
   app:build:
     cmds:
@@ -80,4 +81,4 @@ tasks:
       - docker manifest push darkwind8/argocue:${tag_version}
 
 env:
-  tag_version: v0.3.0
+  tag_version: v0.4.0

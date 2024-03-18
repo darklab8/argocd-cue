@@ -1,4 +1,4 @@
-package pack
+package identifier
 
 import (
 	"os"
@@ -9,11 +9,11 @@ import (
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
 
-type PackageType string
+type Deployment string
 
 const (
-	Helm      PackageType = "helm_tool.cue"
-	Manifests PackageType = "manifests_tool.cue"
+	Helm      Deployment = "helm_tool.cue"
+	Manifests Deployment = "manifests_tool.cue"
 )
 
 func containsAnyFile(workdir utils_types.FilePath, filename string) bool {
@@ -28,7 +28,7 @@ func containsAnyFile(workdir utils_types.FilePath, filename string) bool {
 	return false
 }
 
-func IdentifyPackage(workdir utils_types.FilePath) PackageType {
+func IdentifyDeployment(workdir utils_types.FilePath) Deployment {
 	if containsAnyFile(workdir, string(Helm)) {
 		return Helm
 	}
