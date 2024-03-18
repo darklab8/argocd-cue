@@ -18,8 +18,8 @@ type GetParameters struct {
 
 type AppParameterGroup struct {
 	Name  string            `json:"name"`
-	Map   map[string]string `json:"map"`
-	Array []string          `json:"array"`
+	Map   map[string]string `json:"map,omitempty"`
+	Array []string          `json:"array,omitempty"`
 }
 
 const (
