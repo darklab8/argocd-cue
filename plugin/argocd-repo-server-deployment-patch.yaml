@@ -13,7 +13,7 @@ spec:
             - |
               mv /code/argocue /usr/local/bin/argocue && chmod a+x /usr/local/bin/argocue
               /var/run/install_deps.sh
-          image: darkwind8/argocue:v0.3.0-a2
+          image: darkwind8/argocue:v0.3.0-a3
           volumeMounts:
             - mountPath: /usr/local/bin
               name: cue-plugin-bin
