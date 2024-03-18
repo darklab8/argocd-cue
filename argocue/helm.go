@@ -38,17 +38,23 @@ func RenderHelm(workdir utils_types.FilePath) {
 	if app_parameters, ok := os.LookupEnv("ARGOCD_APP_PARAMETERS"); ok && app_parameters != "" {
 		logus.LogFile.Info("found ARGOCD_APP_PARAMETERS", typelog.String("ARGOCD_APP_PARAMETERS", app_parameters))
 
-		parameters := make(map[string]interface{})
-		err := json.Unmarshal([]byte(app_parameters), &parameters)
-		if !logus.LogFile.CheckWarn(err, "failed to unmarshal args") {
-			if value, ok := parameters["helm-template-args"]; ok {
-				parameters_map := value.(map[string]string)
-				typeloged_envs := []typelog.LogType{}
-				for key, value := range parameters_map {
-					typeloged_envs = append(typeloged_envs, typelog.String(key, value))
+		var parameter_groups []map[string]interface{} = make([]map[string]interface{}, 0)
+		err := json.Unmarshal([]byte(app_parameters), &parameter_groups)
+		if !logus.LogFile.CheckWarn(err, "failed to unmarshal paramaeters") {
+			if len(parameter_groups) != 1 {
+				logus.LogFile.Error("expected finding one parameter group, found more", typelog.Int("len(parameter_groups)", len(parameter_groups)))
+			} else {
+				parameters := parameter_groups[0]
+				if value, ok := parameters["helm-template-args"]; ok {
+					parameters_map := value.(map[string]string)
+					typeloged_envs := []typelog.LogType{}
+					for key, value := range parameters_map {
+						typeloged_envs = append(typeloged_envs, typelog.String(key, value))
+					}
+					logus.LogFile.Info("all parameters", typeloged_envs...)
 				}
-				logus.LogFile.Info("all parameters", typeloged_envs...)
 			}
+
 		}
 	}
 
