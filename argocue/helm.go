@@ -29,6 +29,11 @@ func BuildHelm(workdir utils_types.FilePath) {
 	HandleCmdError(build_out, err, "failed to cue cmd build")
 }
 
+type ParameterGroup struct {
+	Name  string   `json:"name"`
+	Array []string `json:"array"`
+}
+
 func RenderHelm(workdir utils_types.FilePath) {
 	BuildHelm(workdir)
 	// HelmLoadDeps(workdir) // Not working correctly yet. TODO fix.
@@ -39,22 +44,22 @@ func RenderHelm(workdir utils_types.FilePath) {
 	if app_parameters, ok := os.LookupEnv("ARGOCD_APP_PARAMETERS"); ok && app_parameters != "" {
 		logus.LogFile.Info("found ARGOCD_APP_PARAMETERS", typelog.String("ARGOCD_APP_PARAMETERS", app_parameters))
 
-		var parameter_groups []map[string]interface{} = make([]map[string]interface{}, 0)
+		var parameter_groups []ParameterGroup = make([]ParameterGroup, 0)
 		err := json.Unmarshal([]byte(app_parameters), &parameter_groups)
 		if !logus.LogFile.CheckWarn(err, "failed to unmarshal paramaeters") {
-			if len(parameter_groups) != 1 {
-				logus.LogFile.Error("expected finding one parameter group, found more", typelog.Int("len(parameter_groups)", len(parameter_groups)))
-			} else {
-				parameters := parameter_groups[0]
-				if value, ok := parameters["helm-template-args"]; ok {
-					parameters_map := value.([]string)
+			logus.LogFile.Info("succesfully unmarhslaed", typelog.Int("len(parameter_groups)", len(parameter_groups)))
+
+			for _, parameteter_group := range parameter_groups {
+				logus.LogFile.Info("found parameter group", typelog.String("name", parameteter_group.Name))
+				if parameteter_group.Name == "helm-template-args" {
+					logus.LogFile.Info("found helm-template-args", typelog.Items("array", parameteter_group.Array))
 					typeloged_envs := []typelog.LogType{}
-					for i, value := range parameters_map {
+					for i, value := range parameteter_group.Array {
 						typeloged_envs = append(typeloged_envs, typelog.String(strconv.Itoa(i), value))
 					}
 					logus.LogFile.Info("all parameters", typeloged_envs...)
 
-					templating_commands = append(templating_commands, parameters_map...)
+					templating_commands = append(templating_commands, parameteter_group.Array...)
 				}
 			}
 		}
