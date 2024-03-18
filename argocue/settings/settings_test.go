@@ -18,7 +18,7 @@ func TestLoadSettings(t *testing.T) {
 
 func TestLoadHelmParams(t *testing.T) {
 	//json.dumps([{"name":"map_parameters","map":{"release_name":"customstuff"}}])
-	data := []byte(`[{"name": "helm_parameters", "map": {"release_name": "customstuff"}}]`)
+	data := []byte(`[{"name": "helm_parameters", "map": {"name_template": "customstuff"}}]`)
 	app := NewParameters()
 	app.loadData(data)
 
