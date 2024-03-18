@@ -35,9 +35,9 @@ type AppParameters struct {
 		CueVersion *string `json:"cue_version"`
 	}
 	HelmParameters struct {
-		HelmVersion     *string `json:"helm_version"`
-		HelmReleaseName *string `json:"release_name"`
-		HelmNamespace   *string `json:"namespace"`
+		HelmVersion      *string `json:"helm_version"`
+		HelmNameTemplate *string `json:"name_template"`
+		HelmNamespace    *string `json:"namespace"`
 	}
 }
 

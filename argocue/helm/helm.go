@@ -47,8 +47,8 @@ func (h Helm) Generate(workdir utils_types.FilePath) {
 		templating_commands = append(templating_commands, fmt.Sprintf("--namespace=%s", *h.parameters.HelmParameters.HelmNamespace))
 	}
 
-	if h.parameters.HelmParameters.HelmReleaseName != nil {
-		templating_commands = append(templating_commands, fmt.Sprintf("--name-template=%s", *h.parameters.HelmParameters.HelmReleaseName))
+	if h.parameters.HelmParameters.HelmNameTemplate != nil {
+		templating_commands = append(templating_commands, fmt.Sprintf("--name-template=%s", *h.parameters.HelmParameters.HelmNameTemplate))
 	}
 
 	templating_commands = append(templating_commands, ".")

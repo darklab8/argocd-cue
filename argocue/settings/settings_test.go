@@ -22,7 +22,7 @@ func TestLoadHelmParams(t *testing.T) {
 	app := NewParameters()
 	app.loadData(data)
 
-	assert.Equal(t, *app.HelmParameters.HelmReleaseName, "customstuff")
+	assert.Equal(t, *app.HelmParameters.HelmNameTemplate, "customstuff")
 }
 
 func TestLoadCommonParams(t *testing.T) {
