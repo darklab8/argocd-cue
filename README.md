@@ -1,4 +1,4 @@
-Argo cd plugin to support cue language.
+# Argo cd plugin to support Cue language, a.k.a Cuelang
 
 ![example](docs/example.png)
 
@@ -42,3 +42,8 @@ Your can pass extra parameters into argocd application declarations to customize
 
 - deploy argo with `task argo:deploy` ( kubectl apply -k ./plugin )
 - deploy sample apps `task argo:apply`
+
+# Some docs
+
+- [Cuelang docs](https://cuelang.org/)
+- [argocd cue discussion](https://github.com/argoproj/argo-cd/discussions/14472#discussioncomment-8795723)
