@@ -3,8 +3,8 @@ package argocue
 import (
 	"os/exec"
 
+	"github.com/darklab8/argocd-cue/argocue/identifier"
 	"github.com/darklab8/argocd-cue/argocue/logus"
-	"github.com/darklab8/argocd-cue/argocue/pack"
 	"github.com/darklab8/go-typelog/typelog"
 	"github.com/darklab8/go-utils/goutils/utils/utils_types"
 )
@@ -16,13 +16,13 @@ type Deployment interface {
 
 func Run(workdir utils_types.FilePath, command Command) {
 
-	package_type := pack.IdentifyPackage(workdir)
+	package_type := identifier.IdentifyDeployment(workdir)
 	var deployment Deployment
 
 	switch package_type {
-	case pack.Manifests:
+	case identifier.Manifests:
 		deployment = NewManifests()
-	case pack.Helm:
+	case identifier.Helm:
 		deployment = NewHelm()
 	default:
 		logus.LogStdout.Fatal("not recognized package type")

@@ -1,4 +1,4 @@
-package pack
+package identifier
 
 import (
 	"testing"
@@ -19,6 +19,6 @@ func TestType(t *testing.T) {
 	assert.True(t, containsAnyFile(manifests_folder, "manifests_tool.cue"))
 	assert.False(t, containsAnyFile(manifests_folder, "manifests_tool2.cue"))
 
-	assert.Equal(t, IdentifyPackage(helm_folder), Helm)
-	assert.Equal(t, IdentifyPackage(manifests_folder), Manifests)
+	assert.Equal(t, IdentifyDeployment(helm_folder), Helm)
+	assert.Equal(t, IdentifyDeployment(manifests_folder), Manifests)
 }
