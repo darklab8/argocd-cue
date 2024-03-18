@@ -80,4 +80,4 @@ tasks:
       - docker manifest push darkwind8/argocue:${tag_version}
 
 env:
-  tag_version: v0.2.10
+  tag_version: v0.3.0-a1

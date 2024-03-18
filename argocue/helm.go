@@ -29,7 +29,26 @@ func BuildHelm(workdir utils_types.FilePath) {
 func RenderHelm(workdir utils_types.FilePath) {
 	BuildHelm(workdir)
 	// HelmLoadDeps(workdir) // Not working correctly yet. TODO fix.
-	cmd := exec.Command("helm", "template", ".")
+
+	command_exec := "helm"
+	templating_commands := []string{"template"}
+
+	if app_namespace, ok := os.LookupEnv("ARGOCD_APP_NAMESPACE"); ok && app_namespace != "" {
+		templating_commands = append(templating_commands, fmt.Sprintf("--namespace=%s", app_namespace))
+	}
+
+	if app_name, ok := os.LookupEnv("ARGOCD_APP_NAME"); ok && app_name != "" {
+		templating_commands = append(templating_commands, fmt.Sprintf("--name-template=%s", app_name))
+	}
+
+	if app_parameters, ok := os.LookupEnv("ARGOCD_APP_PARAMETERS"); ok && app_parameters != "" {
+		// TODO consider to account later in some flexible enough way ^_^. for manifests and helms
+		fmt.Println("app_parameters=", app_parameters)
+	}
+
+	templating_commands = append(templating_commands, ".")
+
+	cmd := exec.Command(command_exec, templating_commands...)
 	cmd.Dir = workdir.ToString()
 	out, err := cmd.Output()
 	HandleCmdError(out, err, "failed to helm template")
