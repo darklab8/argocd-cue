@@ -14,7 +14,11 @@ Argo cd plugin to support cue language.
     - helm charts
 
 - it is in customize format with pinned all dependencies
-- using cue 0.7.1,  argocd v2.8.11, kubectl v1.29.1 at the moment of this writing
+- using at the moment of this writing:
+    - cue 0.7.1 ([See here](plugin/install_deps.sh) for adjustments)
+    - helm v3.10.3 ([See here](plugin/install_deps.sh) for adjustments)
+    - argocd v2.8.11 (Replace approproate file in [plugin folder](plugin) if necessary)
+    - kubectl v1.29.1
     - dependencies are easily adjustable in install_deps.sh
 - tested on
   - local [Kind cluster](https://kind.sigs.k8s.io/) for amd64 cpu arch, kind v0.22.0, kube v1.29.2
