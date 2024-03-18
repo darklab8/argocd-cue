@@ -12,10 +12,10 @@ import (
 )
 
 type Manifests struct {
-	parameters *settings.ApplicationParameters
+	parameters *settings.AppParameters
 }
 
-func NewManifests(parameters *settings.ApplicationParameters) Manifests {
+func NewManifests(parameters *settings.AppParameters) Manifests {
 	return Manifests{parameters: parameters}
 }
 
@@ -28,7 +28,7 @@ func (m Manifests) Generate(workdir utils_types.FilePath) {
 	fmt.Println(string(out))
 }
 
-func mewManifestsParams(Map map[string]interface{}) []settings.GetParameters {
+func mewManifestsParams(Map map[string]string) []settings.GetParameters {
 	return []settings.GetParameters{
 		{
 			Name:           "manifests-parameters",
@@ -40,7 +40,7 @@ func mewManifestsParams(Map map[string]interface{}) []settings.GetParameters {
 }
 
 func (m Manifests) GetParameters(workdir utils_types.FilePath) {
-	jsoned, err := json.Marshal(mewManifestsParams(map[string]interface{}{}))
+	jsoned, err := json.Marshal(mewManifestsParams(map[string]string{}))
 	logus.LogStdout.CheckWarn(err, "not able to marshal params")
 	fmt.Println(string(jsoned))
 }

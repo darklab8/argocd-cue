@@ -20,6 +20,11 @@ metadata:
 kind: Namespace
 apiVersion: v1
 ---
+metadata:
+  name: cue-helm
+kind: Namespace
+apiVersion: v1
+---
 kind: Application
 apiVersion: argoproj.io/v1alpha1
 metadata:

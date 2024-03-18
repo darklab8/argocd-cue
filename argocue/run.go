@@ -15,7 +15,7 @@ type Deployment interface {
 	GetParameters(utils_types.FilePath)
 }
 
-func Run(parameters *settings.ApplicationParameters, workdir utils_types.FilePath, command settings.Command) {
+func Run(parameters *settings.AppParameters, workdir utils_types.FilePath, command settings.Command) {
 
 	package_type := identifier.IdentifyDeployment(workdir)
 	var deployment Deployment

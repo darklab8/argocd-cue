@@ -11,10 +11,10 @@ import (
 
 func TestManifests(t *testing.T) {
 	manifests_folder := utils_filepath.Join(utils.ProjectRoot, "examples", "manifests")
-	NewManifests(settings.NewApplication()).Generate(utils_types.FilePath(manifests_folder))
+	NewManifests(settings.NewParameters()).Generate(utils_types.FilePath(manifests_folder))
 }
 
 func TestManifestsParams(t *testing.T) {
 	manifests_folder := utils_filepath.Join(utils.ProjectRoot, "examples", "manifests")
-	NewManifests(settings.NewApplication()).GetParameters(utils_types.FilePath(manifests_folder))
+	NewManifests(settings.NewParameters()).GetParameters(utils_types.FilePath(manifests_folder))
 }

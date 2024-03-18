@@ -15,10 +15,10 @@ import (
 )
 
 type Helm struct {
-	parameters *settings.ApplicationParameters
+	parameters *settings.AppParameters
 }
 
-func NewHelm(parameters *settings.ApplicationParameters) Helm { return Helm{parameters: parameters} }
+func NewHelm(parameters *settings.AppParameters) Helm { return Helm{parameters: parameters} }
 
 func helmLoadDeps(workdir utils_types.FilePath) {
 	build := exec.Command("helm", "dep", "update", "--kube-insecure-skip-tls-verify")
@@ -41,7 +41,7 @@ func (h Helm) Generate(workdir utils_types.FilePath) {
 	command_exec := "helm"
 	templating_commands := []string{"template"}
 
-	templating_commands = append(templating_commands, h.parameters.Helm.TemplateArgs...)
+	templating_commands = append(templating_commands, h.parameters.HelmTemplateArgs...)
 
 	templating_commands = append(templating_commands, ".")
 
@@ -52,7 +52,7 @@ func (h Helm) Generate(workdir utils_types.FilePath) {
 	fmt.Println(string(out))
 }
 
-func newHelmParams(Map map[string]interface{}) []settings.GetParameters {
+func newHelmParams(Map map[string]string) []settings.GetParameters {
 	return []settings.GetParameters{
 		{
 			Name:           "helm-parameters",
@@ -65,7 +65,7 @@ func newHelmParams(Map map[string]interface{}) []settings.GetParameters {
 
 func (h Helm) GetParameters(workdir utils_types.FilePath) {
 	buildHelm(workdir)
-	data := make(map[string]interface{})
+	data := make(map[string]string)
 
 	yfile, err := os.ReadFile(utils_filepath.Join(workdir, "values.yaml").ToString())
 

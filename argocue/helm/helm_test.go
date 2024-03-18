@@ -29,11 +29,11 @@ func TestHelm(t *testing.T) {
 	manifests_folder := utils_filepath.Join(utils.ProjectRoot, "examples", "helm")
 	CleanFromYaml(manifests_folder)
 
-	NewHelm(settings.NewApplication()).Generate(utils_types.FilePath(manifests_folder))
+	NewHelm(settings.NewParameters()).Generate(utils_types.FilePath(manifests_folder))
 }
 
 func TestHelmParams(t *testing.T) {
 	manifests_folder := utils_filepath.Join(utils.ProjectRoot, "examples", "helm")
 	CleanFromYaml(manifests_folder)
-	NewHelm(settings.NewApplication()).GetParameters(utils_types.FilePath(manifests_folder))
+	NewHelm(settings.NewParameters()).GetParameters(utils_types.FilePath(manifests_folder))
 }

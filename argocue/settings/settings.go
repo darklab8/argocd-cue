@@ -10,29 +10,41 @@ import (
 )
 
 type GetParameters struct {
-	Name           string                 `json:"name"`
-	Title          string                 `json:"title"`
-	CollectionType string                 `json:"collectionType"`
-	Map            map[string]interface{} `json:"map"`
+	Name           string            `json:"name"`
+	Title          string            `json:"title"`
+	CollectionType string            `json:"collectionType"`
+	Map            map[string]string `json:"map"`
 }
 
-type ApplicationParameters struct {
+type AppParameterGroup struct {
+	Name  string            `json:"name"`
+	Map   map[string]string `json:"map"`
+	Array []string          `json:"array"`
+}
+
+const (
+	APP_PARAMETER_HELM_TEMPLATE_ARGS_KEY = "helm_template_args"
+	APP_PARAMETER_COMMON_PARAMETERS_KEY  = "common_parameters"
+	APP_PARAMETER_HELM_PARAMETERS_KEY    = "helm_parameters"
+)
+
+type AppParameters struct {
 	// Commented stuff for to be implemented a bit in a future
-	Common struct {
-		// CueVersion *string `json:"cue_version"`
-	} `json:"common"`
-	Helm struct {
-		TemplateArgs []string `json:"template_args"`
-		// HelmVersion  *string  `json:"helm_version"`
-		// ReleaseName  *string  `json:"release_name"`
-		// Namespace    *string  `json:"namespace"`
-	} `json:"helm"`
+	HelmTemplateArgs []string
+	CommonParameters struct {
+		CueVersion *string `json:"cue_version"`
+	}
+	HelmParameters struct {
+		HelmVersion     *string `json:"helm_version"`
+		HelmReleaseName *string `json:"release_name"`
+		HelmNamespace   *string `json:"namespace"`
+	}
 }
 
-type AppOption func(app *ApplicationParameters)
+type AppOption func(app *AppParameters)
 
-func NewApplication(opts ...AppOption) *ApplicationParameters {
-	app := &ApplicationParameters{}
+func NewParameters(opts ...AppOption) *AppParameters {
+	app := &AppParameters{}
 
 	for _, opt := range opts {
 		opt(app)
@@ -42,10 +54,36 @@ func NewApplication(opts ...AppOption) *ApplicationParameters {
 }
 
 const (
-	ARGOCUE_PARAM_KEY = "argocd-cue-parameters"
+	HELM_TEMPLATE_ARGS_KEY = "helm_template_args"
+	APP_PARAM_KEY          = "map_parameters"
 )
 
-func (a *ApplicationParameters) Load() {
+func (app *AppParameters) loadData(data []byte) {
+	var argo_params []AppParameterGroup = make([]AppParameterGroup, 0)
+	err := json.Unmarshal(data, &argo_params)
+	logus.LogStdout.CheckFatal(err, "failed to unmarshal")
+
+	for _, argo_param_group := range argo_params {
+
+		if argo_param_group.Name == APP_PARAMETER_HELM_TEMPLATE_ARGS_KEY {
+			app.HelmTemplateArgs = argo_param_group.Array
+
+		} else if argo_param_group.Name == APP_PARAMETER_COMMON_PARAMETERS_KEY {
+			marshaled, err := json.Marshal(argo_param_group.Map)
+			logus.LogStdout.CheckPanic(err, "failed to marshal values for map parameter")
+			err = json.Unmarshal(marshaled, &(app.CommonParameters))
+			logus.LogStdout.CheckPanic(err, "failed to unmarshal values for map parameter")
+
+		} else if argo_param_group.Name == APP_PARAMETER_HELM_PARAMETERS_KEY {
+			marshaled, err := json.Marshal(argo_param_group.Map)
+			logus.LogStdout.CheckPanic(err, "failed to marshal values for map parameter")
+			err = json.Unmarshal(marshaled, &(app.HelmParameters))
+			logus.LogStdout.CheckPanic(err, "failed to unmarshal values for map parameter")
+		}
+	}
+}
+
+func (a *AppParameters) Load() {
 	typeloged_envs := []typelog.LogType{}
 	for _, env := range os.Environ() {
 		values := strings.Split(env, "=")
@@ -64,31 +102,5 @@ func (a *ApplicationParameters) Load() {
 	}
 	logus.LogFile.Info("found ARGOCD_APP_PARAMETERS", typelog.String("ARGOCD_APP_PARAMETERS", app_parameters))
 
-	var parameter_groups []GetParameters = make([]GetParameters, 0)
-	err := json.Unmarshal([]byte(app_parameters), &parameter_groups)
-	if logus.LogFile.CheckWarn(err, "failed to unmarshal paramaeters") {
-		return
-	}
-	logus.LogFile.Info("succesfully unmarhslaed",
-		typelog.Int("len(parameter_groups)", len(parameter_groups)),
-		typelog.String("data", app_parameters),
-	)
-
-	for _, parameteter_group := range parameter_groups {
-
-		logus.LogFile.Info("found parameter group", typelog.String("name", parameteter_group.Name))
-		if parameteter_group.Name == ARGOCUE_PARAM_KEY {
-
-			marshaled_map, err := json.Marshal(parameteter_group.Map)
-			if logus.LogFile.CheckError(err, "failed to marshal parameteter_group.Map") {
-				continue
-			}
-
-			err = json.Unmarshal(marshaled_map, a)
-			if logus.LogFile.CheckError(err, "failed to unarmshal parameteter_group.Map") {
-				continue
-			}
-		}
-	}
-
+	a.loadData([]byte(app_parameters))
 }
